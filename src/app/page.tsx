@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,9 @@ export default async function HomePage() {
           ))
         )}
       </ul>
+      <p style={{ marginTop: "2rem" }}>
+        <Link href="/view-db">view-db</Link> — просмотр БД и CRUD
+      </p>
     </main>
   );
 }
