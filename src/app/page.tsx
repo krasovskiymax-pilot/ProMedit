@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  const session = await auth();
   const notes = await prisma.note.findMany({
     orderBy: { createdAt: "desc" },
   });
@@ -11,6 +13,16 @@ export default async function HomePage() {
   return (
     <main style={{ padding: "2rem", fontFamily: "system-ui" }}>
       <h1>ProMedit — Заметки из PostgreSQL</h1>
+      {session?.user ? (
+        <p>
+          <Link href="/dashboard">Dashboard</Link> |{" "}
+          <Link href="/my-prompts">Мои промпты</Link>
+        </p>
+      ) : (
+        <p>
+          <Link href="/login">Войти через Google</Link>
+        </p>
+      )}
       <p>Данные загружены из NeonDB (PostgreSQL):</p>
       <ul style={{ marginTop: "1rem" }}>
         {notes.length === 0 ? (

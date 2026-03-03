@@ -70,6 +70,16 @@ npx prisma migrate deploy
 
 В `.env` добавьте `DATABASE_URL_WORKING` для выбора рабочей БД (если не задано — используется DATABASE_URL).
 
+## Аутентификация (Auth.js + Google OAuth)
+
+- **Страница входа:** `/login` — кнопка «Войти через Google»
+- **Защищённые маршруты:** `/dashboard`, `/my-prompts` (middleware перенаправляет неавторизованных на `/login`)
+
+Переменные окружения в `.env`:
+- `AUTH_SECRET` — секрет для сессий (сгенерировать: `openssl rand -base64 32`)
+- `GOOGLE_CLIENT_ID` — из [Google Cloud Console](https://console.cloud.google.com/)
+- `GOOGLE_CLIENT_SECRET`
+
 ## Команды
 
 | Команда | Описание |
