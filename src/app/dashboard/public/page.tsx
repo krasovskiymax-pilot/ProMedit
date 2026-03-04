@@ -1,9 +1,10 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { PromptsList } from "./PromptsList";
+import { PromptCard } from "@/components/PromptCard";
+import { PromptsListPublic } from "./PromptsListPublic";
 
-export default async function DashboardPage({
+export default async function PublicPromptsPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string; sort?: string }>;
@@ -16,7 +17,7 @@ export default async function DashboardPage({
   const { q, sort } = await searchParams;
 
   const prompts = await prisma.prompt.findMany({
-    where: { ownerId: session.user.id },
+    where: { isPublic: true },
     orderBy: sort === "title" ? { title: "asc" } : { updatedAt: "desc" },
     take: 50,
   });
@@ -31,11 +32,11 @@ export default async function DashboardPage({
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold">Мои медитации</h1>
+      <h1 className="text-3xl font-bold">Публичные медитации</h1>
       <p className="mt-2 text-muted-foreground">
-        Создавайте и управляйте своими медитациями
+        Медитации, которые другие пользователи сделали публичными
       </p>
-      <PromptsList
+      <PromptsListPublic
         prompts={filtered}
         userId={session.user.id}
         searchQuery={q}

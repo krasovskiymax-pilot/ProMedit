@@ -16,7 +16,7 @@ export default async function HomePage() {
       {session?.user ? (
         <p>
           <Link href="/dashboard">Dashboard</Link> |{" "}
-          <Link href="/my-prompts">Мои промпты</Link>
+          <Link href="/my-prompts">Мои медитации</Link>
         </p>
       ) : (
         <p>
