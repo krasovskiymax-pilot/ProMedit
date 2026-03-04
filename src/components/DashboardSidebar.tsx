@@ -61,9 +61,6 @@ export function DashboardSidebar({ user }: { user: UserProps }) {
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate font-medium">{displayName}</p>
-            {user?.email && (
-              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-            )}
           </div>
         </div>
         <nav className="flex-1 space-y-1 p-4">
