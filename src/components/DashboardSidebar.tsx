@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   MessageSquare,
@@ -9,6 +10,7 @@ import {
   History,
   Settings,
   LogOut,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,17 +24,47 @@ const navItems = [
   { href: "/dashboard/settings", label: "Настройки", icon: Settings },
 ];
 
-export function DashboardSidebar() {
+type UserProps = {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+};
+
+export function DashboardSidebar({ user }: { user: UserProps }) {
   const pathname = usePathname();
+  const displayName = user?.name || user?.email || "Пользователь";
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-[280px] border-r border-border bg-sidebar dark:bg-sidebar">
+    <aside className="fixed left-0 top-0 z-40 h-screen w-[280px] border-r border-border bg-sidebar">
       <div className="flex h-full flex-col">
         <div className="flex h-14 items-center border-b border-sidebar-border px-6">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
             <MessageSquare className="h-6 w-6" />
             <span>ProMedit</span>
           </Link>
+        </div>
+        <div className="flex items-center gap-3 border-b border-sidebar-border px-4 py-4">
+          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-muted">
+            {user?.image ? (
+              <Image
+                src={user.image}
+                alt={displayName}
+                fill
+                className="object-cover"
+                sizes="48px"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <User className="h-6 w-6 text-muted-foreground" />
+              </div>
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-medium">{displayName}</p>
+            {user?.email && (
+              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+            )}
+          </div>
         </div>
         <nav className="flex-1 space-y-1 p-4">
           {navItems.map((item) => {
