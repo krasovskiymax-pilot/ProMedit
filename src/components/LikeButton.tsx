@@ -8,17 +8,19 @@ export function LikeButton({
   promptId,
   initialLiked,
   initialCount,
+  disabled = false,
 }: {
   promptId: string;
   initialLiked: boolean;
   initialCount: number;
+  disabled?: boolean;
 }) {
   const [liked, setLiked] = useState(initialLiked);
   const [count, setCount] = useState(initialCount);
   const [loading, setLoading] = useState(false);
 
   async function handleClick() {
-    if (loading) return;
+    if (loading || disabled) return;
     setLoading(true);
     const prevLiked = liked;
     const prevCount = count;
@@ -53,7 +55,8 @@ export function LikeButton({
       size="sm"
       className="gap-1.5"
       onClick={handleClick}
-      disabled={loading}
+      disabled={loading || disabled}
+      title={disabled ? "Нельзя лайкать свою медитацию" : undefined}
     >
       <Heart
         className={`h-4 w-4 ${liked ? "fill-red-500 text-red-500" : ""}`}

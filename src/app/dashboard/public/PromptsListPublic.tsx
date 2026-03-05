@@ -84,9 +84,10 @@ export function PromptsListPublic({
               key={prompt.id}
               prompt={prompt}
               isOwner={prompt.ownerId === userId}
-              showLikeButton={!prompt.ownerId || prompt.ownerId !== userId}
+              showLikeButton
               likesCount={prompt.likesCount}
               likedByMe={prompt.likedByMe}
+              isOwnMeditation={prompt.ownerId === userId}
             />
           ))}
         </div>

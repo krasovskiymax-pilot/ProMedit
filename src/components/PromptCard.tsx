@@ -36,12 +36,14 @@ export function PromptCard({
   showLikeButton,
   likesCount = 0,
   likedByMe = false,
+  isOwnMeditation = false,
 }: {
   prompt: Prompt;
   isOwner: boolean;
   showLikeButton?: boolean;
   likesCount?: number;
   likedByMe?: boolean;
+  isOwnMeditation?: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [editOpen, setEditOpen] = useState(false);
@@ -133,6 +135,7 @@ export function PromptCard({
             promptId={prompt.id}
             initialLiked={likedByMe}
             initialCount={likesCount}
+            disabled={isOwnMeditation}
           />
         )}
       </CardContent>
