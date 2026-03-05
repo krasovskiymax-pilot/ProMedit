@@ -16,10 +16,24 @@ export default async function PublicPromptsPage({
 
   const { q, sort } = await searchParams;
 
+  const orderBy =
+    sort === "popular"
+      ? { likes: { _count: "desc" as const } }
+      : sort === "title"
+        ? { title: "asc" as const }
+        : { createdAt: "desc" as const };
+
   const prompts = await prisma.prompt.findMany({
     where: { isPublic: true },
-    orderBy: sort === "title" ? { title: "asc" } : { updatedAt: "desc" },
+    orderBy,
     take: 50,
+    include: {
+      _count: { select: { likes: true } },
+      likes: {
+        where: { userId: session.user.id },
+        select: { id: true },
+      },
+    },
   });
 
   const filtered = q
@@ -30,6 +44,12 @@ export default async function PublicPromptsPage({
       )
     : prompts;
 
+  const promptsWithMeta = filtered.map(({ _count, likes, ...p }) => ({
+    ...p,
+    likesCount: _count.likes,
+    likedByMe: likes.length > 0,
+  }));
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold">Публичные медитации</h1>
@@ -37,7 +57,7 @@ export default async function PublicPromptsPage({
         Медитации, которые другие пользователи сделали публичными
       </p>
       <PromptsListPublic
-        prompts={filtered}
+        prompts={promptsWithMeta}
         userId={session.user.id}
         searchQuery={q}
         sort={sort}

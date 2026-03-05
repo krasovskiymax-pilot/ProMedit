@@ -22,6 +22,7 @@ model User {
   meditations   Meditation[]
   votes         Vote[]
   prompts       Prompt[]
+  promptLikes   PromptLike[]
 }
 
 model Prompt {
@@ -35,9 +36,23 @@ model Prompt {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  likes PromptLike[]
+
   @@index([ownerId])
   @@index([ownerId, isPublic])
   @@index([isPublic])
+}
+
+model PromptLike {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  promptId  String
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, promptId])
+  @@index([promptId])
 }
 
 model Account {

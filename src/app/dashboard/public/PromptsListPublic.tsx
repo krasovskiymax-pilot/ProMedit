@@ -6,13 +6,18 @@ import { PromptCard } from "@/components/PromptCard";
 import { Input } from "@/components/ui/input";
 import type { Prompt } from "@prisma/client";
 
+export type PromptWithLikes = Prompt & {
+  likesCount: number;
+  likedByMe: boolean;
+};
+
 export function PromptsListPublic({
   prompts,
   userId,
   searchQuery,
   sort,
 }: {
-  prompts: Prompt[];
+  prompts: PromptWithLikes[];
   userId: string;
   searchQuery?: string;
   sort?: string;
@@ -52,7 +57,7 @@ export function PromptsListPublic({
           />
         </div>
         <select
-          value={sort ?? "updated"}
+          value={sort ?? "recent"}
           onChange={(e) => {
             const params = new URLSearchParams(searchParams.toString());
             params.set("sort", e.target.value);
@@ -60,7 +65,8 @@ export function PromptsListPublic({
           }}
           className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
         >
-          <option value="updated">По дате</option>
+          <option value="recent">По дате</option>
+          <option value="popular">По популярности</option>
           <option value="title">По названию</option>
         </select>
       </div>
@@ -78,6 +84,9 @@ export function PromptsListPublic({
               key={prompt.id}
               prompt={prompt}
               isOwner={prompt.ownerId === userId}
+              showLikeButton={!prompt.ownerId || prompt.ownerId !== userId}
+              likesCount={prompt.likesCount}
+              likedByMe={prompt.likedByMe}
             />
           ))}
         </div>

@@ -19,6 +19,7 @@ import {
   toggleFavorite,
   deletePrompt,
 } from "@/app/actions/prompts";
+import { LikeButton } from "./LikeButton";
 import { useTransition, useState } from "react";
 import { PromptDialog } from "./PromptDialog";
 import type { Prompt } from "@prisma/client";
@@ -32,9 +33,15 @@ function previewText(text: string, maxLen = 120): string {
 export function PromptCard({
   prompt,
   isOwner,
+  showLikeButton,
+  likesCount = 0,
+  likedByMe = false,
 }: {
   prompt: Prompt;
   isOwner: boolean;
+  showLikeButton?: boolean;
+  likesCount?: number;
+  likedByMe?: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [editOpen, setEditOpen] = useState(false);
@@ -117,10 +124,17 @@ export function PromptCard({
           </div>
         )}
       </CardHeader>
-      <CardContent className="flex-1">
+      <CardContent className="flex-1 space-y-2">
         <p className="text-sm text-muted-foreground line-clamp-2">
           {previewText(prompt.content)}
         </p>
+        {showLikeButton && (
+          <LikeButton
+            promptId={prompt.id}
+            initialLiked={likedByMe}
+            initialCount={likesCount}
+          />
+        )}
       </CardContent>
       <PromptDialog
         open={editOpen}
